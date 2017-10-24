@@ -1,0 +1,6 @@
+# Ansible stuff
+*.retry
+
+# Playbook run artifacts
+render/*
+diffs/*
