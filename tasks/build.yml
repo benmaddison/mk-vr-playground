@@ -1,0 +1,21 @@
+---
+  - name: build virtual routers
+    docker_container:
+      name: "{{ hostname }}"
+      image: "{{ docker_image }}"
+      privileged: true
+    register: container
+  - debug:
+      var: container.ansible_facts.docker_container.NetworkSettings.IPAddress
+  - debug:
+      var: container.ansible_facts.docker_container.State.Health.Status
+  - name: build links
+    docker_container:
+      name: "bridge-{{ item.left.node }}-{{ item.left.interface }}-{{ item.right.node }}-{{ item.right.interface }}"
+      image: "vr-xcon"
+      command: '--p2p "{{ item.left.node }}/{{ item.left.interface }}--{{ item.right.node }}/{{ item.right.interface }}"'
+      links:
+        - "{{ item.left.node }}"
+        - "{{ item.right.node }}"
+    with_items: "{{ links }}"
+...

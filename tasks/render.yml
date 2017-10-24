@@ -1,0 +1,8 @@
+---
+  - name: render configs
+    template:
+      src: "{{ dialect }}.j2"
+      dest: "{{ render_path }}"
+      backup: false
+      force: true
+...
