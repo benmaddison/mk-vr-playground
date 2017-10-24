@@ -1,0 +1,19 @@
+---
+  hostname: "{{ inventory_hostname }}"
+  ansible_connection: local
+  ansible_python_interpreter: python
+  napalm_username: "vrnetlab"
+  napalm_password: "VR-netlab9"
+  napalm_driver: "{{ dialect }}"
+
+  links:
+    - left:
+        node: vr1
+        interface: 1
+      right:
+        node: vr1
+        interface: 2
+
+  render_path: "render/{{ inventory_hostname }}.conf"
+  docker_image: "vr-{{ platform }}:{{ version }}"
+...
