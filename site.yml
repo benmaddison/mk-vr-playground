@@ -2,7 +2,7 @@
 ---
   - hosts: all
     tasks:
-      - include: tasks/build.yml
+      - include: tasks/run.yml
       - include: tasks/render.yml
-      - include: tasks/deploy.yml
+      - include: tasks/configure.yml
 ...

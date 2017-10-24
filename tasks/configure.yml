@@ -1,5 +1,5 @@
 ---
-  - name: deploy configs
+  - name: configure routers
     napalm_install_config:
       hostname: "{{ container.ansible_facts.docker_container.NetworkSettings.IPAddress }}"
       username: "{{ napalm_username }}"

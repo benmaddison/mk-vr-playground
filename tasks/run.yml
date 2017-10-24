@@ -5,10 +5,7 @@
       image: "{{ docker_image }}"
       privileged: true
     register: container
-  - debug:
-      var: container.ansible_facts.docker_container.NetworkSettings.IPAddress
-  - debug:
-      var: container.ansible_facts.docker_container.State.Health.Status
+    until: container.ansible_facts.docker_container.State.Health.Status == "healthy"
   - name: build links
     docker_container:
       name: "bridge-{{ item.left.node }}-{{ item.left.interface }}-{{ item.right.node }}-{{ item.right.interface }}"
