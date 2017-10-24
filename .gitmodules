@@ -1,0 +1,3 @@
+[submodule "modules/napalm-ansible"]
+	path = modules/napalm-ansible
+	url = https://github.com/napalm-automation/napalm-ansible.git
