@@ -2,4 +2,7 @@
   platform: csr
   version: 16.3.1
   dialect: ios
+  loopback:
+    ipv4: 10.0.0.1
+    ipv6: 2001:db8::1
 ...

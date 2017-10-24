@@ -1,18 +1,29 @@
 ---
-  - name: build virtual routers
-    docker_container:
-      name: "{{ hostname }}"
-      image: "{{ docker_image }}"
-      privileged: true
-    register: container
-    until: container.ansible_facts.docker_container.State.Health.Status == "healthy"
-  - name: build links
-    docker_container:
-      name: "bridge-{{ item.left.node }}-{{ item.left.interface }}-{{ item.right.node }}-{{ item.right.interface }}"
-      image: "vr-xcon"
-      command: '--p2p "{{ item.left.node }}/{{ item.left.interface }}--{{ item.right.node }}/{{ item.right.interface }}"'
-      links:
-        - "{{ item.left.node }}"
-        - "{{ item.right.node }}"
-    with_items: "{{ links }}"
+  - block:
+      - name: run virtual router containers
+        docker_container:
+          name: "{{ hostname }}"
+          image: "{{ docker_image }}"
+          privileged: true
+        register: container
+        until: container.ansible_facts.docker_container.State.Health.Status == "healthy"
+        retries: 10
+        delay: 30
+      - name: run xconnect containers
+        docker_container:
+          name: "bridge-{{ item.nodes.0.node }}-{{ item.nodes.0.interface }}-{{ item.nodes.1.node }}-{{ item.nodes.1.interface }}"
+          image: vr-xcon
+          command: '--p2p "{{ item.nodes.0.node }}/{{ item.nodes.0.interface }}--{{ item.nodes.1.node }}/{{ item.nodes.1.interface }}"'
+          links:
+            - "{{ item.nodes.0.node }}"
+            - "{{ item.nodes.1.node }}"
+        run_once: true
+        with_items: "{{ links }}"
+    rescue:
+      - name: kill virtual router containers
+        docker_container:
+          name: "{{ hostname }}"
+          image: "{{ docker_image }}"
+          force_kill: true
+          state: absent
 ...

@@ -7,12 +7,14 @@
   napalm_driver: "{{ dialect }}"
 
   links:
-    - left:
-        node: vr1
+    - nodes:
+      - node: vr1
         interface: 1
-      right:
-        node: vr1
-        interface: 2
+      - node: vr2
+        interface: 1
+      subnets:
+        ipv4: 10.1.1.0/30
+        ipv6: 2001:db8:f00::/126
 
   render_path: "render/{{ inventory_hostname }}.conf"
   docker_image: "vr-{{ platform }}:{{ version }}"
